@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
  * NOTE : =============================================================
@@ -478,14 +479,24 @@ public class AddressBook {
 
     /**
      * Retrieves all persons in the full model whose names contain some of the specified keywords.
+     * This method is not case sensitive when matching names to keywords.
      *
      * @param keywords for searching
      * @return list of persons in full model with name containing some of the keywords
      */
     private static ArrayList<String[]> getPersonsWithNameContainingAnyKeyword(Collection<String> keywords) {
+        keywords = keywords // Converts all keywords to lowercase
+                .stream()
+                .map(String::toLowerCase)
+                .collect(Collectors
+                        .toSet());
         final ArrayList<String[]> matchedPersons = new ArrayList<>();
         for (String[] person : getAllPersonsInAddressBook()) {
-            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            // Gets a set of person's name separated by whitespace - each name substring is in lower case
+            final Set<String> wordsInName = splitByWhitespace(getNameFromPerson(person))
+                    .stream()
+                    .map(String::toLowerCase)
+                    .collect(Collectors.toSet());
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
