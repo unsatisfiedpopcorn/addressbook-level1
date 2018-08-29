@@ -60,6 +60,9 @@
   find Dickson
   # find multiple with some keywords
   find Charlie Betsy
+  # find multiple with some keywords while ignoring case
+  find cHaRlIe BeTsY
+
 
 ##########################################################
 # test delete person command
